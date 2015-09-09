@@ -21,3 +21,18 @@ stream within a small time interval.
 `splmeter.py` requires that PyAlsaAudio be installed so that it can be imported
 with `import alsaaudio`. Find it here: https://github.com/larsimmisch/pyalsaaudio
 
+
+## Usage:
+
+To test it out, first run the HTTP server,
+```
+./httpservice.py
+```
+and then run the SPL meter,
+```
+./splmeter.py
+```
+
+If the default audio device doesn't work, check out your list of ALSA devices
+using `aplay -L` and specify the correct device via
+`./splmeter.py -c <soundcard>`.
