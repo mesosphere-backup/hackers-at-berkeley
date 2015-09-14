@@ -1,0 +1,27 @@
+<!doctype html>
+<title>Hello from DCOS</title>
+<script type="text/javascript"
+  src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript">
+  var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
+
+{% block body %}
+<script type="text/javascript">
+  function executeQuery() {
+    $.ajax({
+      url: '/read',
+      success: function(data) {
+      }
+    });
+    setTimeout(executeQuery, 5000);
+  }
+
+  $(document).ready(function() {
+    setTimeout(executeQuery, 5000);
+  });
+</script>
+
+<h1>Hello from DCOS</h1>
+
+{% endblock %}
