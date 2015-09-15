@@ -16,19 +16,19 @@ On each Raspberry Pi we use the [USB Kinobo microphone](http://www.amazon.com/Ki
 
 2. Install [Cassandra](https://docs.mesosphere.com/services/cassandra/):
 
-    dcos package install cassandra
+    `dcos package install cassandra`
 
 3. Install [Spark](https://docs.mesosphere.com/services/spark/):
 
-    dcos package install spark
+    `dcos package install spark`
 
 4. Install [Kafka](https://docs.mesosphere.com/services/kafka/):
 
-    dcos package install kafka
+    `dcos package install kafka`
 
 5. Add a Kafka broker:
 
-    dcos kafka add
+    `dcos kafka add`
 
 
 ### 2) Micstream
