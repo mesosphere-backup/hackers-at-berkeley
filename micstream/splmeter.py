@@ -117,7 +117,11 @@ if __name__ == '__main__':
                 params = urllib.urlencode({'data': post_data})
                 conn.request('POST', '', params, headers)
 
-                conn.getresponse()
+                try:
+                    conn.getresponse()
+                except socket.timeout:
+                    print("ERROR: HTTP POST timed out.")
+                    raise
 
                 now = datetime.datetime.now()
                 print(unicode(now) + ' - HTTP response received.')
