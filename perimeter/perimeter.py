@@ -57,7 +57,7 @@ def write(sensor_id, sensor_value):
                            b"%s %d" % (sensor_id, sensor_value))
     session = cassandra_cli.connect()
     results = session.execute('INSERT INTO mesosphere.hab (x, y, value) '
-                              'VALUES (%s, %d)' % (sensor_id, sensor_value)
+                              'VALUES (%s, %d)' % (sensor_id, sensor_value))
     return 'sensor %s submitted value %d' % (sensor_id, sensor_value)
 
 if __name__ == "__main__":
