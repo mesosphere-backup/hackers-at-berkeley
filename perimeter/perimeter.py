@@ -9,7 +9,7 @@ cassandra_cli = Cluster(['cassandra-dcos-node.cassandra.dcos.mesos'])
 
 # Kafka may not always run on the same port, so we need to perform
 # an SRV record lookup in order to find it.
-kafka_location = srvlookup.lookup('kafka', 'tcp', 'mesos')[0]
+kafka_location = srvlookup.lookup('broker-0', 'tcp', 'kafka.mesos')[0]
 kafka = KafkaClient("%s:%s" % (kafka_location.host, kafka_location.port))
 
 # Real-world Kafka workloads will gain an order of magnitude++
@@ -21,7 +21,7 @@ producer = SimpleProducer(kafka, async=True)
 app = Flask(__name__)
 
 @app.route('/')
-@app.route('/whatever/<value>'
+@app.route('/whatever/<value>')
 def index(value=None):
     # serve code that periodically hits /read to get the
     # latest spark results from Cassandra
@@ -30,7 +30,7 @@ def index(value=None):
 @app.route('/read')
 def read():
     # read data from cassandra, if it's been populated yet
-    session = cluster.connect('TEMPLATE_CASSANDRA_KEYSPACE')
+    session = cassandra_cli.connect('TEMPLATE_CASSANDRA_KEYSPACE')
     rows = [{"sensor_id": r.id, "sensor_value": r.value} for r in
         session.execute('SELECT id, value FROM spark_results')]
     return jsonify(rows)
@@ -38,11 +38,11 @@ def read():
 @app.route('/submit/<int:sensor_id>/<int:sensor_value>')
 def write(sensor_id, sensor_value):
     producer.send_messages(b'TEMPLATE_KAFKA_TOPIC',
-                           b"%d %d" % sensor_id, sensor_value)
+                           b"%d %d" % (sensor_id, sensor_value))
     return 'sensor %d submitted value %d' % (sensor_id, sensor_value)
 
 if __name__ == "__main__":
     # In a real environment, never run with debug=True
     # because it gives you an interactive shell when you
-    # trigger an exception.
-    app.run(host="0.0.0.0", debug=True)
+    # trigger an unhandled exception.
+    app.run(host="0.0.0.0", debug=True, port=8080)
