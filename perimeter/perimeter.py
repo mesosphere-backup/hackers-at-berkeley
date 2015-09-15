@@ -5,7 +5,21 @@ import srvlookup
 
 # This uses mesos-dns to locate our cassandra cluster.  Cassandra
 # always runs on the same port.
-cassandra_cli = Cluster(['cassandra-dcos-node.cassandra.dcos.mesos'])
+cassandra_cli = Cluster(['cassandra-dcos-node.cassandra.dcos.mesos'],
+                        protocol_version=3)
+
+# Setup cassandra if necessary
+cc = cassandra_cli.connect()
+cc.execute("""
+CREATE KEYSPACE IF NOT EXISTS TEMPLATE_CASSANDRA_KEYSPACE
+WITH replication = {'class':'SimpleStrategy', 'replication_factor':3}""")
+cc.execute("""
+CREATE TABLE IF NOT EXISTS TEMPLATE_CASSANDRA_KEYSPACE.spark_results (
+  x int,
+  y int,
+  value int,
+  PRIMARY KEY (x, y)
+)""")
 
 # Kafka may not always run on the same port, so we need to perform
 # an SRV record lookup in order to find it.
@@ -30,9 +44,10 @@ def index(value=None):
 @app.route('/read')
 def read():
     # read data from cassandra, if it's been populated yet
-    session = cassandra_cli.connect('TEMPLATE_CASSANDRA_KEYSPACE')
-    rows = [{"sensor_id": r.id, "sensor_value": r.value} for r in
-        session.execute('SELECT id, value FROM spark_results')]
+    session = cassandra_cli.connect()
+    results = session.execute('SELECT id, value
+                               FROM TEMPLATE_CASSANDRA_KEYSPACE.spark_results')
+    rows = [{"x": r.x, "y": r.y, "value": r.value} for r in results]
     return jsonify(rows)
 
 @app.route('/submit/<int:sensor_id>/<int:sensor_value>')
