@@ -1,0 +1,61 @@
+[0m[[0mdebug[0m] [0m[0m
+[0m[[0mdebug[0m] [0mInitial source changes: [0m
+[0m[[0mdebug[0m] [0m	removed:Set()[0m
+[0m[[0mdebug[0m] [0m	added: Set(/Users/gmann/src/hackers-at-berkeley/spark/src/main/scala/micstream_spark.scala)[0m
+[0m[[0mdebug[0m] [0m	modified: Set()[0m
+[0m[[0mdebug[0m] [0mInvalidated products: Set()[0m
+[0m[[0mdebug[0m] [0mExternal API changes: API Changes: Set()[0m
+[0m[[0mdebug[0m] [0mModified binary dependencies: Set()[0m
+[0m[[0mdebug[0m] [0mInitial directly invalidated sources: Set(/Users/gmann/src/hackers-at-berkeley/spark/src/main/scala/micstream_spark.scala)[0m
+[0m[[0mdebug[0m] [0m[0m
+[0m[[0mdebug[0m] [0mSources indirectly invalidated by:[0m
+[0m[[0mdebug[0m] [0m	product: Set()[0m
+[0m[[0mdebug[0m] [0m	binary dep: Set()[0m
+[0m[[0mdebug[0m] [0m	external source: Set()[0m
+[0m[[0mdebug[0m] [0mAll initially invalidated sources: Set(/Users/gmann/src/hackers-at-berkeley/spark/src/main/scala/micstream_spark.scala)[0m
+[0m[[0mdebug[0m] [0mRecompiling all 1 sources: invalidated sources (1) exceeded 50.0% of all sources[0m
+[0m[[0minfo[0m] [0mCompiling 1 Scala source to /Users/gmann/src/hackers-at-berkeley/spark/target/scala-2.10/classes...[0m
+[0m[[0mdebug[0m] [0mGetting compiler-interface from component compiler for Scala 2.10.5[0m
+[0m[[0mdebug[0m] [0mGetting compiler-interface from component compiler for Scala 2.10.5[0m
+[0m[[0mdebug[0m] [0mRunning cached compiler 8bb3f02, interfacing (CompilerInterface) with Scala compiler version 2.10.5[0m
+[0m[[0mdebug[0m] [0mCalling Scala compiler with arguments  (CompilerInterface):[0m
+[0m[[0mdebug[0m] [0m	-bootclasspath[0m
+[0m[[0mdebug[0m] [0m	/Library/Java/JavaVirtualMachines/jdk1.8.0_51.jdk/Contents/Home/jre/lib/resources.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_51.jdk/Contents/Home/jre/lib/rt.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_51.jdk/Contents/Home/jre/lib/sunrsasign.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_51.jdk/Contents/Home/jre/lib/jsse.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_51.jdk/Contents/Home/jre/lib/jce.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_51.jdk/Contents/Home/jre/lib/charsets.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_51.jdk/Contents/Home/jre/lib/jfr.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_51.jdk/Contents/Home/jre/classes:/Users/gmann/.sbt/boot/scala-2.10.5/lib/scala-library.jar[0m
+[0m[[0mdebug[0m] [0m	-classpath[0m
+[0m[[0mdebug[0m] [0m	/Users/gmann/src/hackers-at-berkeley/spark/target/scala-2.10/classes[0m
+[0m[[31merror[0m] [0m/Users/gmann/src/hackers-at-berkeley/spark/src/main/scala/micstream_spark.scala:6: object apache is not a member of package org[0m
+[0m[[31merror[0m] [0mimport org.apache.spark.streaming._[0m
+[0m[[31merror[0m] [0m           ^[0m
+[0m[[31merror[0m] [0m/Users/gmann/src/hackers-at-berkeley/spark/src/main/scala/micstream_spark.scala:7: object apache is not a member of package org[0m
+[0m[[31merror[0m] [0mimport org.apache.spark.streaming.kafka._[0m
+[0m[[31merror[0m] [0m           ^[0m
+[0m[[31merror[0m] [0m/Users/gmann/src/hackers-at-berkeley/spark/src/main/scala/micstream_spark.scala:8: object apache is not a member of package org[0m
+[0m[[31merror[0m] [0mimport org.apache.spark.SparkConf[0m
+[0m[[31merror[0m] [0m           ^[0m
+[0m[[31merror[0m] [0m/Users/gmann/src/hackers-at-berkeley/spark/src/main/scala/micstream_spark.scala:10: object datastax is not a member of package com[0m
+[0m[[31merror[0m] [0mimport com.datastax.driver.core.Cluster;[0m
+[0m[[31merror[0m] [0m           ^[0m
+[0m[[31merror[0m] [0m/Users/gmann/src/hackers-at-berkeley/spark/src/main/scala/micstream_spark.scala:11: object datastax is not a member of package com[0m
+[0m[[31merror[0m] [0mimport com.datastax.driver.core.Host;[0m
+[0m[[31merror[0m] [0m           ^[0m
+[0m[[31merror[0m] [0m/Users/gmann/src/hackers-at-berkeley/spark/src/main/scala/micstream_spark.scala:12: object datastax is not a member of package com[0m
+[0m[[31merror[0m] [0mimport com.datastax.driver.core.Metadata;[0m
+[0m[[31merror[0m] [0m           ^[0m
+[0m[[31merror[0m] [0m/Users/gmann/src/hackers-at-berkeley/spark/src/main/scala/micstream_spark.scala:13: object datastax is not a member of package com[0m
+[0m[[31merror[0m] [0mimport com.datastax.driver.core.Session;[0m
+[0m[[31merror[0m] [0m           ^[0m
+[0m[[31merror[0m] [0m/Users/gmann/src/hackers-at-berkeley/spark/src/main/scala/micstream_spark.scala:35: not found: value Cluster[0m
+[0m[[31merror[0m] [0m    val cluster = Cluster.builder().addContactPoint(node).build();[0m
+[0m[[31merror[0m] [0m                  ^[0m
+[0m[[31merror[0m] [0m/Users/gmann/src/hackers-at-berkeley/spark/src/main/scala/micstream_spark.scala:43: not found: type SparkConf[0m
+[0m[[31merror[0m] [0m    val sparkConf = new SparkConf().setAppName("SparkMicstream")[0m
+[0m[[31merror[0m] [0m                        ^[0m
+[0m[[31merror[0m] [0m/Users/gmann/src/hackers-at-berkeley/spark/src/main/scala/micstream_spark.scala:44: not found: type StreamingContext[0m
+[0m[[31merror[0m] [0m    val ssc = new StreamingContext(sparkConf, Seconds(2))[0m
+[0m[[31merror[0m] [0m                  ^[0m
+[0m[[31merror[0m] [0m/Users/gmann/src/hackers-at-berkeley/spark/src/main/scala/micstream_spark.scala:48: not found: value KafkaUtils[0m
+[0m[[31merror[0m] [0m    val packets = KafkaUtils.createStream(ssc, zkQuorum, group, topicMap)[0m
+[0m[[31merror[0m] [0m                  ^[0m
+[0m[[31merror[0m] [0m11 errors found[0m
+[0m[[0mdebug[0m] [0mCompilation failed (CompilerInterface)[0m
+[0m[[31merror[0m] [0m(compile:[31mcompileIncremental[0m) Compilation failed[0m

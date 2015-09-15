@@ -45,16 +45,20 @@ def index(value=None):
 def read():
     # read data from cassandra, if it's been populated yet
     session = cassandra_cli.connect()
-    results = session.execute('SELECT id, value
-                               FROM TEMPLATE_CASSANDRA_KEYSPACE.spark_results')
+    results = session.execute('SELECT id, value '
+                              'FROM TEMPLATE_CASSANDRA_KEYSPACE.spark_results')
     rows = [{"x": r.x, "y": r.y, "value": r.value} for r in results]
     return jsonify(rows)
 
-@app.route('/submit/<int:sensor_id>/<int:sensor_value>')
+@app.route('/submit/<sensor_id>/<int:sensor_value>')
 def write(sensor_id, sensor_value):
+    (x, y) = sensor_id.split(',')
     producer.send_messages(b'TEMPLATE_KAFKA_TOPIC',
-                           b"%d %d" % (sensor_id, sensor_value))
-    return 'sensor %d submitted value %d' % (sensor_id, sensor_value)
+                           b"%s %d" % (sensor_id, sensor_value))
+    session = cassandra_cli.connect()
+    results = session.execute('INSERT INTO mesosphere.hab (x, y, value) '
+                              'VALUES (%s, %d)' % (sensor_id, sensor_value)
+    return 'sensor %s submitted value %d' % (sensor_id, sensor_value)
 
 if __name__ == "__main__":
     # In a real environment, never run with debug=True
