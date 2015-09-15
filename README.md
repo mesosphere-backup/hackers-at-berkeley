@@ -10,7 +10,28 @@ We use Raspberry Pis of either version 1 B+ or version 2 B with [Raspbian](https
 On each Raspberry Pi we use the [USB Kinobo microphone](http://www.amazon.com/Kinobo-Microphone-Desktop-Recognition-Software/dp/B00IR8R7WQ/ref=sr_1_4?s=pc&ie=UTF8&qid=1441404716&sr=1-4&keywords=usb+microphone).
 
 
-### 1) Micstream
+### 1) DCOS Cluster with Cassandra, Kafka and Spark
+
+1. Stand up a [Mesosphere DCOS cluster on Amazon Web Services](https://mesosphere.com/product/). Configure the DCOS CLI to point to this cluster.
+
+2. Install [Cassandra](https://docs.mesosphere.com/services/cassandra/):
+
+    dcos package install cassandra
+
+3. Install [Spark](https://docs.mesosphere.com/services/spark/):
+
+    dcos package install spark
+
+4. Install [Kafka](https://docs.mesosphere.com/services/kafka/):
+
+    dcos package install kafka
+
+5. Add a Kafka broker:
+
+    dcos kafka add
+
+
+### 2) Micstream
 
 Reads input from an ALSA-compatible microphone and transmits at regular
 intervals HTTP POST messages containing a colon-delimited list of integers.
@@ -63,6 +84,10 @@ using `aplay -L` and specify the correct device via
 `./splmeter.py -c <soundcard>`.
 
 
-### 2) Perimeter
+### 3) Perimeter
 
 REST API that provides an interface to write values and read stored values.
+
+### Installation
+
+`dcos marathon app add perimeter/marathon.json`
