@@ -31,6 +31,10 @@ object SparkMicstream {
     val node = "cassandra-dcos-node.cassandra.dcos.mesos"
     val Array(zkQuorum, group, topics, numThreads) = args
 
+    val sparkConf = new SparkConf().setAppName("SparkMicstream")
+    val ssc = new StreamingContext(sparkConf, Seconds(2))
+    ssc.checkpoint("checkpoint")
+
     val cluster = Cluster.builder().addContactPoint(node).build();
     val metadata = cluster.getMetadata()
     System.out.printf("Connected to cluster: %s\n",
@@ -43,10 +47,6 @@ object SparkMicstream {
         "y int, " +
         "value int, " +
         "PRIMARY KEY (x, y)")
-
-    val sparkConf = new SparkConf().setAppName("SparkMicstream")
-    val ssc = new StreamingContext(sparkConf, Seconds(2))
-    ssc.checkpoint("checkpoint")
 
     val topicMap = topics.split(",").map((_, numThreads.toInt)).toMap
     val packets = KafkaUtils.createStream(ssc, zkQuorum, group, topicMap)
