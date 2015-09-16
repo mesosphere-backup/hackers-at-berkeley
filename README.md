@@ -35,7 +35,7 @@ On each Raspberry Pi we use the [USB Kinobo microphone](http://www.amazon.com/Ki
 ## 2) Micstream
 
 Reads input from an ALSA-compatible microphone and transmits at regular
-intervals HTTP POST messages containing a colon-delimited list of integers.
+intervals HTTP GET requests containing a colon-delimited list of integers.
 
 This stream represents the sound pressure level (SPL) of the audio source in
 unspecified units; it is simply the root mean square of all values in the input
@@ -53,6 +53,12 @@ If this fails to install, you may need to install the package `python-dev` or eq
 
     sudo apt-get install -y python-dev
 
+You'll want to know what audio device to use. Using these microphones on our Raspberry Pis, the value we use is "hw:1".
+
+If the default audio device doesn't work, check out your list of ALSA devices
+using `aplay -L` and specify the correct device via
+`./splmeter.py -c <soundcard>`.
+
 #### Installation
 
 `splmeter.py -h` for usage instructions.
@@ -63,26 +69,11 @@ Check out this repository into your home directory:
 
 You can configure this script to run at boot by editing the crontab for the root user:
 
-    sudo crontab -e /home/pi/hackers-at-berkeley/micstream/splmeter.py 
+    sudo crontab -e
 
 And appending this line to start the script upon a restart:
 
-    @reboot /home/pi/hackers-at-berkeley/micstream/splmeter.py 
-
-#### Usage:
-
-To test it out, first run the HTTP server,
-```
-./httpservice.py
-```
-and then run the SPL meter,
-```
-./splmeter.py
-```
-
-If the default audio device doesn't work, check out your list of ALSA devices
-using `aplay -L` and specify the correct device via
-`./splmeter.py -c <soundcard>`.
+    @reboot /home/pi/hackers-at-berkeley/micstream/splmeter.py -H "hackers-at-berkeley.mesosphere.com" -i 1 -c hw:1 -p 8088 > /home/pi/splmeter.out
 
 
 ## 3) Perimeter
