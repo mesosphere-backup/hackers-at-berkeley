@@ -1,18 +1,17 @@
 #!/usr/bin/env python
 
 import alsaaudio
+import argparse
 import array
 import atexit
 import datetime
 import getopt
 import httplib
 import math
+import requests
 import sys
 import time
 import urllib
-
-def cleanup(http_connection):
-    http_connection.close()
 
 def rms(buffer):
     """Calculate the root-mean-square of some iterable full of numbers."""
@@ -22,22 +21,25 @@ def rms(buffer):
     return int(math.sqrt(total))
 
 def usage():
-    print('Usage: splmeter.py [-c <soundcard>] [-i <IP address=127.0.0.1>] '
-          '[-p <port=8080>] [-n <packet size=100>]')
+    print('Usage: splmeter.py [-id <id=0>][-c <soundcard>] [-h <hostname=localhost>] '
+          '[-p <port=80>] [-n <packet size=100>]')
     sys.exit(0)
 
+def now():
+    return unicode(datetime.datetime.now())
 
 if __name__ == '__main__':
 
-    soundcard = 'default'
-
     # These parameters can be set at the command line:
+    ID = 0
+    # Soundcard that PyAlsaAudio should use
+    soundcard = 'default'
     # The number of volume measurements in each HTTP POST request.
     PACKET_SIZE = 100
     # The IP address to send measurements to, as a 4-tuple.
-    IP_ADDRESS = (127, 0, 0, 1)
+    HOSTNAME = 'localhost'
     # The port to send measurements on.
-    PORT = 8080
+    PORT = 80
 
     # These parameters cannot be set at the command line:
     # The number of samples per second.
@@ -45,15 +47,21 @@ if __name__ == '__main__':
     # The number of samples in each root-mean-squared packet.
     PERIOD_SIZE = 1600
 
-    opts, args = getopt.getopt(sys.argv[1:], 'c:i:p:n:h')
+    opts, args = getopt.getopt(sys.argv[1:], 'c:h:p:n')
     for o, a in opts:
-        if o == '-c':
-            soundcard = a
         if o == '-i':
             try:
-                IP_ADDRESS = tuple([int(i) for i in a.split('.')])
+                ID = int(a)
+            except TypeError:
+                print ('ERRROR: Not a valid ID.')
+                raise
+        if o == '-c':
+            soundcard = a
+        if o == '-h':
+            try:
+                HOSTNAME = str(a)
             except (TypeError, ValueError):
-                print('ERROR: Not a valid IP address.')
+                print('ERROR: Not a valid hostname.')
                 raise
         if o == '-p':
             try:
@@ -67,7 +75,7 @@ if __name__ == '__main__':
             except (TypeError, ValueError):
                 print('ERROR: Not a valid packet size.')
                 raise
-        if o == '-h':
+        if o == '--help':
             usage()
 
     # Open the device in nonblocking capture mode.
@@ -83,12 +91,6 @@ if __name__ == '__main__':
     # The period size controls the internal number of frames per period.
     # The significance of this parameter is documented in the ALSA api.
     inp.setperiodsize(PERIOD_SIZE)
-
-    headers = {'Content-type': 'application/x-www-form-urlencoded',
-               'Accept': 'text/plain'}
-    conn = httplib.HTTPConnection('.'.join([str(i) for i in IP_ADDRESS]),
-                                  PORT, timeout=10)
-    atexit.register(cleanup, conn)
 
     packet = []
 
@@ -111,20 +113,14 @@ if __name__ == '__main__':
 
             if j >= PACKET_SIZE:
                 now = datetime.datetime.now()
-                print(unicode(now) + ' - Sending HTTP POST request...')
+                print(now() + ' - Sending HTTP GET request...')
 
                 post_data = ':'.join([str(i) for i in packet])
-                params = urllib.urlencode({'data': post_data})
-                conn.request('POST', '', params, headers)
+                encoded_data = urllib.urlencode({'data': post_data})
+                request_url = "http://{}:{}/submit/{}/{}".format(HOSTNAME, PORT, ID, encoded_data)
+                r = requests.get(request_url)
 
-                try:
-                    conn.getresponse()
-                except socket.timeout:
-                    print("ERROR: HTTP POST timed out.")
-                    raise
-
-                now = datetime.datetime.now()
-                print(unicode(now) + ' - HTTP response received.')
+                print(now() + ' - Response was: {}'.format(r.status_code))
 
                 j = 0
                 packet = []
