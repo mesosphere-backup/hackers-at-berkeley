@@ -1,5 +1,5 @@
 {
-  "id": "/micstream-endpoint",
+  "id": "/perimeter",
   "cpus": 1,
   "mem": 256,
   "instances": 1,
@@ -14,7 +14,7 @@
       "portMappings": [
           {
               "containerPort": 8088,
-              "hostPort": 8088,
+              "hostPort": 80,
               "protocol": "tcp"
           }
       ]

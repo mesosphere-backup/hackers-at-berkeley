@@ -1,12 +1,9 @@
 #!/usr/bin/env python
 
 import alsaaudio
-import argparse
 import array
-import atexit
 import datetime
 import getopt
-import httplib
 import math
 import requests
 import sys
