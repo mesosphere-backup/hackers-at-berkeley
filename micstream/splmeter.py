@@ -115,9 +115,11 @@ if __name__ == '__main__':
                 url_data = ':'.join([str(i) for i in packet])
                 request_url = "http://{}:{}/submit/{}/{}".format(HOSTNAME, PORT, ID, url_data)
                 print(now() + ' - {}'.format(request_url))
-                r = requests.get(request_url, timeout=TIMEOUT)
-                print(now() + ' - Response was: {}'.format(r.status_code))
-
+                try:
+                    r = requests.get(request_url, timeout=TIMEOUT)
+                    print(now() + ' - Response was: {}'.format(r.status_code))
+                except requests.exceptions.ReadTimeout:
+                    print('ERROR: Read timeout')
                 j = 0
                 packet = []
 
