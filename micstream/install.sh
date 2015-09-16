@@ -4,7 +4,7 @@ ID=$1
 
 if [ -e /home/pi/hackers-at-berkeley ]
 then
-    rm -rfi /home/pi/hackers-at-berkeley
+    rm -rf /home/pi/hackers-at-berkeley
 fi
 
 # Clone GitHub repo
