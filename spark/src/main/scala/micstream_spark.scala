@@ -46,14 +46,26 @@ object SparkMicstream {
 
     val topicMap = topics.split(",").map((_, numThreads.toInt)).toMap
     val packets = KafkaUtils.createStream(ssc, zkQuorum, group, topicMap)
-    val volumes = packets.map(_.split(" ")).map(_._2.toInt)
-    volumes.foreachRDD{
-      val sensor_id = _._1
-      val mean_volume = _._2.split(":").sum / vol_array.length
-      session.execute("DELETE from mesosphere.hab " +
+    val volumes = packets//packets.map(_.split(" ")).map(_._2.toInt)
+    volumes.foreachRDD { (rdd, time) =>
+      rdd.foreach { case (kafkaMessageId, message) =>
+        // ASSUMPTIONS:
+        //  1. The tuple `t` represents a single message from kafka (KafkaMessageId, Message)
+        //  2. The message should fit the following format "x,y amplitude1:amplitude2:amplitude3"
+
+        val Array(xy, amplitudeStrings) = message.split(" ")
+        val Array(xString, yString) = xy.split(",")
+        val x = xString.toInt
+        val y = yString.toInt
+ 
+        val sensor_id = xy
+        val vol_array = amplitudeStrings.split(":").map(_.toInt)
+        val mean_volume = vol_array.sum / vol_array.length
+        session.execute("DELETE from TEMPLATE_CASSANDRA_KEYSPACE.spark_results " +
                       s"WHERE sensor_id = $sensor_id")
-      session.execute("INSERT INTO mesosphere.hab (x, y, value)" +
+        session.execute("INSERT INTO TEMPLATE_CASSANDRA_KEYSPACE.spark_results (x, y, value)" +
       	              s"VALUES ($x, $y, $mean_volume)")
+      }
     }
 
     ssc.start()
