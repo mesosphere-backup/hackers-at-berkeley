@@ -7,6 +7,12 @@ then
     rm -rf /home/pi/hackers-at-berkeley
 fi
 
+# Install python-dev
+apt-get update && apt-get install -y python-dev
+
+# Install pyalsaaudio and requests
+pip install requests pyalsaaudio
+
 # Clone GitHub repo
 git clone https://github.com/mesosphere/hackers-at-berkeley.git /home/pi/hackers-at-berkeley
 

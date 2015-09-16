@@ -45,22 +45,6 @@ stream within a small time interval.
 
 We run this script on each Raspberry Pi.
 
-#### Pre-requisites
-
-Install [PyAlsaAudio](https://github.com/larsimmisch/pyalsaaudio):
-
-    sudo pip install pyalsaaudio
-
-If this fails to install, you may need to install the package `python-dev` or equivalent for your operating system:
-
-    sudo apt-get install -y python-dev
-
-You'll want to know what audio device to use. Using these microphones on our Raspberry Pis, the value we use is "hw:1".
-
-If the default audio device doesn't work, check out your list of ALSA devices
-using `aplay -L` and specify the correct device via
-`./splmeter.py -c <soundcard>`.
-
 #### Installation
 
 To run it as a one off, clone this repo and see `splmeter.py -h` for usage instructions.
@@ -68,6 +52,13 @@ To run it as a one off, clone this repo and see `splmeter.py -h` for usage instr
 To install it as a long running service (this will reboot your Pi), passing in the ID of the node:
 
     wget https://raw.githubusercontent.com/mesosphere/hackers-at-berkeley/master/micstream/install.sh && sudo bash install.sh 1
+
+##### Gotchas
+
+You'll want to know what audio device to use. Using these microphones on our Raspberry Pis, the value we use is "hw:1", which is set as the default in the installation script.
+
+If this doesn't work, check out your list of ALSA devices
+using `aplay -L` and specify the correct device in the install script.
 
 ## 3) Perimeter
 
