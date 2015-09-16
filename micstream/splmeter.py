@@ -117,7 +117,7 @@ if __name__ == '__main__':
                 url_data = ':'.join([str(i) for i in packet])
                 #encoded_data = urllib.urlencode(url_data)
                 request_url = "http://{}:{}/submit/{}/{}".format(HOSTNAME, PORT, ID, url_data)
-		print(now() + ' - {}'.format(request_url))
+                print(now() + ' - {}'.format(request_url))
                 r = requests.get(request_url)
                 print(now() + ' - Response was: {}'.format(r.status_code))
 
