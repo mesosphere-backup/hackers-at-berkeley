@@ -7,10 +7,10 @@ import org.apache.spark.streaming._
 import org.apache.spark.streaming.kafka._
 import org.apache.spark.SparkConf
 
-import com.datastax.driver.core.Cluster;
-import com.datastax.driver.core.Host;
-import com.datastax.driver.core.Metadata;
-import com.datastax.driver.core.Session;
+import com.datastax.driver.core.Cluster
+import com.datastax.driver.core.Host
+import com.datastax.driver.core.Metadata
+import com.datastax.driver.core.Session
 
 /**
 * Consumes sound volume messages from one or more topics in Kafka,
