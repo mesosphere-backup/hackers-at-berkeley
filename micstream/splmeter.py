@@ -8,7 +8,6 @@ import math
 import requests
 import sys
 import time
-import urllib
 
 def rms(buffer):
     """Calculate the root-mean-square of some iterable full of numbers."""
