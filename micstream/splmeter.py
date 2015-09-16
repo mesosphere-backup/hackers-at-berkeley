@@ -120,6 +120,8 @@ if __name__ == '__main__':
                     print(now() + ' - Response was: {}'.format(r.status_code))
                 except requests.exceptions.ReadTimeout:
                     print('ERROR: Read timeout')
+                except requests.exceptions.ConnectionError:
+                    print('ERROR: Connection error')
                 j = 0
                 packet = []
 
