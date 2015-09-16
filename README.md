@@ -63,9 +63,9 @@ using `aplay -L` and specify the correct device via
 
 To run it as a one off, clone this repo and see `splmeter.py -h` for usage instructions.
 
-To install it as a long running service (this will reboot your Pi):
+To install it as a long running service (this will reboot your Pi), passing in the ID of the node:
 
-    wget https://raw.githubusercontent.com/mesosphere/hackers-at-berkeley/master/micstream/install.sh && sudo bash install.sh
+    wget https://raw.githubusercontent.com/mesosphere/hackers-at-berkeley/master/micstream/install.sh && sudo bash install.sh 1
 
 ## 3) Perimeter
 
