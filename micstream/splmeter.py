@@ -21,7 +21,7 @@ def rms(buffer):
     return int(math.sqrt(total))
 
 def usage():
-    print('Usage: splmeter.py [-i <id=0>][-c <soundcard>] [-H <hostname=localhost>] '
+    print('Usage: splmeter.py [-i <id=1>][-c <soundcard>] [-H <hostname=localhost>] '
           '[-p <port=80>] [-n <packet size=100>]')
     sys.exit(0)
 
@@ -31,7 +31,7 @@ def now():
 if __name__ == '__main__':
 
     # These parameters can be set at the command line:
-    ID = 0
+    ID = 1
     # Soundcard that PyAlsaAudio should use
     soundcard = 'default'
     # The number of volume measurements in each HTTP POST request.
