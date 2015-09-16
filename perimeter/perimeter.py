@@ -95,8 +95,8 @@ def write(sensor_id, sensor_value):
     results = session.execute('INSERT INTO '
                               'TEMPLATE_CASSANDRA_KEYSPACE.spark_results '
                               '(x, y, value) '
-                              'VALUES (%s, %s, %d)' % (x, y, sensor_value))
-    return 'sensor %s submitted value %d' % (sensor_id, sensor_value)
+                              'VALUES (%s, %s, %d)' % (x, y, average_value))
+    return 'sensor %s submitted value %d' % (sensor_id, average_value)
 
 if __name__ == "__main__":
     # In a real environment, never run with debug=True
