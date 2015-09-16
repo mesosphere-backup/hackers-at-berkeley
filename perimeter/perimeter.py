@@ -76,12 +76,15 @@ def remove(sensor_id):
                               'WHERE x = ' + x + ' AND y = ' + y)
     return 'removed data at x=%s, y=%s' % (x, y)
 
-@app.route('/submit/<sensor_id>/<int:sensor_value>')
+@app.route('/submit/<sensor_id>/<sensor_value>')
 def write(sensor_id, sensor_value):
     if sensor_id.find(',') >= 0:
         (x, y) = sensor_id.split(',')
     else:
         (x, y) = [str(i) for i in sensor_map[int(sensor_id)]]
+
+    value_array = [int(i) for i in sensor_value.split(':')]
+    average_value = sum(value_array) / len(value_array)
 
     # producer.send_messages(b'TEMPLATE_KAFKA_TOPIC',
     #                        b"%s %d" % (sensor_id, sensor_value))
@@ -92,8 +95,8 @@ def write(sensor_id, sensor_value):
     results = session.execute('INSERT INTO '
                               'TEMPLATE_CASSANDRA_KEYSPACE.spark_results '
                               '(x, y, value) '
-                              'VALUES (%s, %s, %d)' % (x, y, sensor_value))
-    return 'sensor %s submitted value %d' % (sensor_id, sensor_value)
+                              'VALUES (%s, %s, %d)' % (x, y, average_value))
+    return 'sensor %s submitted value %d' % (sensor_id, average_value)
 
 if __name__ == "__main__":
     # In a real environment, never run with debug=True

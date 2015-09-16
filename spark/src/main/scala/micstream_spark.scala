@@ -21,24 +21,28 @@ import com.datastax.driver.core.Session;
 *   <group> is the name of kafka consumer group
 *   <topics> is a list of one or more kafka topics to consume from
 *   <numThreads> is the number of threads the kafka consumer should use
-*   <cassandraNode> is the IP address of the Cassandra node
 */
 object SparkMicstream {
   def main(args: Array[String]) {
     if (args.length < 4) {
-      System.err.println("Usage: SparkMicstream <zkQuorum> <group> <topics> <numThreads> <cassandraNode>")
+      System.err.println("Usage: SparkMicstream <zkQuorum> <group> <topics> <numThreads>")
       System.exit(1)
     }
-
-    val Array(zkQuorum, group, topics, numThreads, node) = args
+    val node = "cassandra-dcos-node.cassandra.dcos.mesos"
+    val Array(zkQuorum, group, topics, numThreads) = args
 
     val cluster = Cluster.builder().addContactPoint(node).build();
     val metadata = cluster.getMetadata()
     System.out.printf("Connected to cluster: %s\n",
         metadata.getClusterName())
     val session = cluster.connect()
-    session.execute("CREATE TABLE mesosphere.hab (" +
-        "sensor_id text PRIMARY KEY, volume int)")
+    session.execute("CREATE KEYSPACE IF NOT EXISTS mesosphere " +
+        "WITH replication = {'class':'SimpleStrategy', 'replication_factor':3}")
+    session.execute("CREATE TABLE IF NOT EXISTS mesosphere.spark_results (" +
+        "x int, " +
+        "y int, " +
+        "value int, " +
+        "PRIMARY KEY (x, y)")
 
     val sparkConf = new SparkConf().setAppName("SparkMicstream")
     val ssc = new StreamingContext(sparkConf, Seconds(2))
@@ -46,8 +50,8 @@ object SparkMicstream {
 
     val topicMap = topics.split(",").map((_, numThreads.toInt)).toMap
     val packets = KafkaUtils.createStream(ssc, zkQuorum, group, topicMap)
-    val volumes = packets//packets.map(_.split(" ")).map(_._2.toInt)
-    volumes.foreachRDD { (rdd, time) =>
+    // packets.map(_.split(" ")).map(_._2.toInt)
+    packets.foreachRDD { (rdd, time) =>
       rdd.foreach { case (kafkaMessageId, message) =>
         // ASSUMPTIONS:
         //  1. The tuple `t` represents a single message from kafka (KafkaMessageId, Message)
@@ -61,9 +65,9 @@ object SparkMicstream {
         val sensor_id = xy
         val vol_array = amplitudeStrings.split(":").map(_.toInt)
         val mean_volume = vol_array.sum / vol_array.length
-        session.execute("DELETE from TEMPLATE_CASSANDRA_KEYSPACE.spark_results " +
+        session.execute("DELETE from mesosphere.spark_results " +
                       s"WHERE sensor_id = $sensor_id")
-        session.execute("INSERT INTO TEMPLATE_CASSANDRA_KEYSPACE.spark_results (x, y, value)" +
+        session.execute("INSERT INTO mesosphere.spark_results (x, y, value)" +
       	              s"VALUES ($x, $y, $mean_volume)")
       }
     }
