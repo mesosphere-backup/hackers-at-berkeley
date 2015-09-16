@@ -65,8 +65,7 @@ To run it as a one off, clone this repo and see `splmeter.py -h` for usage instr
 
 To install it as a long running service (this will reboot your Pi):
 
-    wget https://raw.githubusercontent.com/mesosphere/hackers-at-berkeley/master/micstream/install.sh
-    sudo bash install.sh
+    wget https://raw.githubusercontent.com/mesosphere/hackers-at-berkeley/master/micstream/install.sh && sudo bash install.sh
 
 ## 3) Perimeter
 
