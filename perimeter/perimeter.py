@@ -63,7 +63,7 @@ def write(sensor_id, sensor_value):
     session = cassandra_cli.connect()
     results = session.execute('DELETE FROM '
                               'TEMPLATE_CASSANDRA_KEYSPACE.spark_results '
-                              'WHERE x = ' + x + ' AND y = ' + y
+                              'WHERE x = ' + x + ' AND y = ' + y)
     results = session.execute('INSERT INTO '
                               'TEMPLATE_CASSANDRA_KEYSPACE.spark_results '
                               '(x, y, value) '
