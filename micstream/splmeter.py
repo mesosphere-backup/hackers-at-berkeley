@@ -21,7 +21,7 @@ def rms(buffer):
     return int(math.sqrt(total))
 
 def usage():
-    print('Usage: splmeter.py [-id <id=0>][-c <soundcard>] [-h <hostname=localhost>] '
+    print('Usage: splmeter.py [-i <id=0>][-c <soundcard>] [-H <hostname=localhost>] '
           '[-p <port=80>] [-n <packet size=100>]')
     sys.exit(0)
 
@@ -47,7 +47,7 @@ if __name__ == '__main__':
     # The number of samples in each root-mean-squared packet.
     PERIOD_SIZE = 1600
 
-    opts, args = getopt.getopt(sys.argv[1:], 'c:h:p:n')
+    opts, args = getopt.getopt(sys.argv[1:], 'i:c:H:p:n:h')
     for o, a in opts:
         if o == '-i':
             try:
@@ -57,7 +57,7 @@ if __name__ == '__main__':
                 raise
         if o == '-c':
             soundcard = a
-        if o == '-h':
+        if o == '-H':
             try:
                 HOSTNAME = str(a)
             except (TypeError, ValueError):
@@ -75,7 +75,7 @@ if __name__ == '__main__':
             except (TypeError, ValueError):
                 print('ERROR: Not a valid packet size.')
                 raise
-        if o == '--help':
+        if o == '-h':
             usage()
 
     # Open the device in nonblocking capture mode.
@@ -112,14 +112,13 @@ if __name__ == '__main__':
             time.sleep(.001)
 
             if j >= PACKET_SIZE:
-                now = datetime.datetime.now()
                 print(now() + ' - Sending HTTP GET request...')
 
-                post_data = ':'.join([str(i) for i in packet])
-                encoded_data = urllib.urlencode({'data': post_data})
-                request_url = "http://{}:{}/submit/{}/{}".format(HOSTNAME, PORT, ID, encoded_data)
+                url_data = ':'.join([str(i) for i in packet])
+                #encoded_data = urllib.urlencode(url_data)
+                request_url = "http://{}:{}/submit/{}/{}".format(HOSTNAME, PORT, ID, url_data)
+		print(now() + ' - {}'.format(request_url))
                 r = requests.get(request_url)
-
                 print(now() + ' - Response was: {}'.format(r.status_code))
 
                 j = 0
