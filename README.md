@@ -61,20 +61,13 @@ using `aplay -L` and specify the correct device via
 
 #### Installation
 
-`splmeter.py -h` for usage instructions.
+To run it as a one off, clone this repo and see `splmeter.py -h` for usage instructions.
 
-Check out this repository into your home directory:
+To install it as a long running service (this will reboot your Pi):
 
-    git clone git clone git@github.com:mesosphere/hackers-at-berkeley.git
-
-You can configure this script to run at boot by editing the crontab for the root user:
-
-    sudo crontab -e
-
-And appending this line to start the script upon a restart:
-
-    @reboot /home/pi/hackers-at-berkeley/micstream/splmeter.py -H "hackers-at-berkeley.mesosphere.com" -i 1 -c hw:1 -p 8088 > /home/pi/splmeter.out
-
+    wget https://raw.githubusercontent.com/mesosphere/hackers-at-berkeley/master/micstream/install.sh
+    chmod +x install.sh
+    sudo install.sh
 
 ## 3) Perimeter
 
