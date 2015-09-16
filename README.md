@@ -26,7 +26,7 @@ On each Raspberry Pi we use the [USB Kinobo microphone](http://www.amazon.com/Ki
 
 5. Add a Kafka broker:
 
-    `dcos kafka add`
+    `dcos kafka add 0`
 
 
 ## 2) Micstream
