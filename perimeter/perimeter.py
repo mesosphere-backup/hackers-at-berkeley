@@ -35,6 +35,10 @@ producer = SimpleProducer(kafka, async=True)
 app = Flask(__name__)
 
 @app.route('/')
+@app.route('/test')
+def test_endpoint():
+    return 'testing...'
+
 @app.route('/whatever/<value>')
 def index(value=None):
     # serve code that periodically hits /read to get the
@@ -48,13 +52,14 @@ def read():
     results = session.execute('SELECT x, y, value '
                               'FROM TEMPLATE_CASSANDRA_KEYSPACE.spark_results')
     rows = [{"x": r.x, "y": r.y, "value": r.value} for r in results]
-    return jsonify(rows)
+    # return jsonify(rows)
+    return str(rows)
 
 @app.route('/submit/<sensor_id>/<int:sensor_value>')
 def write(sensor_id, sensor_value):
     (x, y) = sensor_id.split(',')
-    producer.send_messages(b'TEMPLATE_KAFKA_TOPIC',
-                           b"%s %d" % (sensor_id, sensor_value))
+    # producer.send_messages(b'TEMPLATE_KAFKA_TOPIC',
+    #                        b"%s %d" % (sensor_id, sensor_value))
     session = cassandra_cli.connect()
     results = session.execute('INSERT INTO '
                               'TEMPLATE_CASSANDRA_KEYSPACE.spark_results '
