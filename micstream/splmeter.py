@@ -99,7 +99,7 @@ if __name__ == '__main__':
         # Non-zero frame_count when the buffer has just been filled. The buffer
         # is empty again after this read, and frame_count will be zero until
         # the buffer is filled again.
-        if frame_count:
+        if frame_count > 0:
             data_int_array = array.array('h', bytes(data))
             rms_value = rms(data_int_array)
             packet.append(rms_value)
@@ -112,7 +112,6 @@ if __name__ == '__main__':
                 print(now() + ' - Sending HTTP GET request...')
 
                 url_data = ':'.join([str(i) for i in packet])
-                #encoded_data = urllib.urlencode(url_data)
                 request_url = "http://{}:{}/submit/{}/{}".format(HOSTNAME, PORT, ID, url_data)
                 print(now() + ' - {}'.format(request_url))
                 r = requests.get(request_url)
