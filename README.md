@@ -24,9 +24,12 @@ On each Raspberry Pi we use the [USB Kinobo microphone](http://www.amazon.com/Ki
 
     `dcos package install kafka`
 
-5. Add a Kafka broker:
+5. Add and start a Kafka broker:
 
     `dcos kafka add 0`
+    `dcos kafka start 0`
+
+6. Optionally, create a nice hostname in Route53 and set it to CNAME the "PublicSlaveDnsAddress" of your cluster. (See the [Public App tutorial](https://docs.mesosphere.com/tutorials/publicapp/) for details on how to get this.)
 
 
 ## 2) Micstream
