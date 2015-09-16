@@ -34,6 +34,17 @@ producer = SimpleProducer(kafka, async=True)
 
 app = Flask(__name__)
 
+default_ranges = {"intensity": [0, 5000],
+                  "x": [0, 100],
+                  "y": [0, 25]}
+
+sensor_map = {1: [25, 8],
+              2: [25, 16],
+              3: [75, 8],
+              4: [75, 16],
+              5: [50, 8],
+              6: [50, 16]}
+
 @app.route('/')
 @app.route('/test')
 def test_endpoint():
@@ -51,13 +62,27 @@ def read():
     session = cassandra_cli.connect()
     results = session.execute('SELECT x, y, value '
                               'FROM TEMPLATE_CASSANDRA_KEYSPACE.spark_results')
-    rows = [{"x": r.x, "y": r.y, "value": r.value} for r in results]
-    # return jsonify(rows)
-    return str(rows)
+    rows = [{"x": r.x, "y": r.y, "intensity": r.value} for r in results]
+    return jsonify({"ranges": default_ranges,
+                    "sources": rows})
+
+@app.route('/remove/<sensor_id>')
+def remove(sensor_id):
+    (x, y) = sensor_id.split(',')
+    # read data from cassandra, if it's been populated yet
+    session = cassandra_cli.connect()
+    results = session.execute('DELETE FROM '
+                              'TEMPLATE_CASSANDRA_KEYSPACE.spark_results '
+                              'WHERE x = ' + x + ' AND y = ' + y)
+    return 'removed data at x=%s, y=%s' % (x, y)
 
 @app.route('/submit/<sensor_id>/<int:sensor_value>')
 def write(sensor_id, sensor_value):
-    (x, y) = sensor_id.split(',')
+    if sensor_id.find(',') >= 0:
+        (x, y) = sensor_id.split(',')
+    else:
+        (x, y) = [str(i) for i in sensor_map[int(sensor_id)]]
+
     # producer.send_messages(b'TEMPLATE_KAFKA_TOPIC',
     #                        b"%s %d" % (sensor_id, sensor_value))
     session = cassandra_cli.connect()
@@ -74,4 +99,4 @@ if __name__ == "__main__":
     # In a real environment, never run with debug=True
     # because it gives you an interactive shell when you
     # trigger an unhandled exception.
-    app.run(host="0.0.0.0", debug=True, port=8080)
+    app.run(host="0.0.0.0", debug=True, port=8088)

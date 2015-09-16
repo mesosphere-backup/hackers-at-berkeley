@@ -1,5 +1,5 @@
 {
-  "id": "/greg",
+  "id": "/micstream-endpoint",
   "cpus": 1,
   "mem": 256,
   "instances": 1,
@@ -13,8 +13,8 @@
       "network": "BRIDGE",
       "portMappings": [
           {
-              "containerPort": 8080,
-              "hostPort": 80,
+              "containerPort": 8088,
+              "hostPort": 8088,
               "protocol": "tcp"
           }
       ]
