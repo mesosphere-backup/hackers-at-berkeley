@@ -9,6 +9,12 @@ stream within a small time interval.
 
 We run this script on each Raspberry Pi.
 
+## Hardware
+
+We use Raspberry Pis of either version 1 B+ or version 2 B with [Raspbian](https://www.raspbian.org/) installed. The Raspberry Pis must be connected to the internet.
+
+On each Raspberry Pi we use the [USB Kinobo microphone](http://www.amazon.com/Kinobo-Microphone-Desktop-Recognition-Software/dp/B00IR8R7WQ/ref=sr_1_4?s=pc&ie=UTF8&qid=1441404716&sr=1-4&keywords=usb+microphone).
+
 ## Installation
 
 To run it as a one off, clone this repo and see `splmeter.py -h` for usage instructions.
