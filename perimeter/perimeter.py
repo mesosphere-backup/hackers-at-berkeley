@@ -76,6 +76,7 @@ def read():
                         "sources": rows})
     except e:
         print >> sys.stderr, "failed to execute read on cassandra: %s" % e
+        try_setup()
         return e
 
 @app.route('/remove/<sensor_id>')
@@ -90,6 +91,7 @@ def remove(sensor_id):
         return 'removed data at x=%s, y=%s' % (x, y)
     except e:
         print >> sys.stderr, "failed to execute delete on cassandra: %s" % e
+        try_setup()
         return e
 
 @app.route('/submit/<sensor_id>/<sensor_value>')
@@ -115,6 +117,7 @@ def write(sensor_id, sensor_value):
         return 'sensor %s submitted value %d' % (sensor_id, average_value)
     except e:
         print >> sys.stderr, "failed to execute read on cassandra: %s" % e
+        try_setup()
 
 if __name__ == "__main__":
     # In a real environment, never run with debug=True
