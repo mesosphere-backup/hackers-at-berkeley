@@ -12,6 +12,14 @@
     $.ajax({
       url: '/read',
       success: function(data) {
+        console.log(data);
+        results = "<ul>";
+        for (result in data.results) {
+          console.log(results)
+          results += "<li>" + result +"</li>";
+        }
+        results += "</ul>"
+        $("#results").html(results);
       }
     });
     setTimeout(executeQuery, 5000);
@@ -23,5 +31,6 @@
 </script>
 
 <h1>Hello from DCOS</h1>
+<div id="results">1</div>
 
 {% endblock %}
