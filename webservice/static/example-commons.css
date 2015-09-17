@@ -8,7 +8,7 @@ html {
 h1, h2 { text-align:center; }
 h2 { font-size:1.2em; margin-top:20px; margin-bottom:10px; }
 .hot { color:#ec1e1e; }
-.demo-wrapper { height:400px; background:rgba(0,0,0,.03); border:3px solid black; }
+.demo-wrapper { background:rgba(0,0,0,.03); border:3px solid black; }
 .heatmap { width:100%; height:100%; }
 .btn { background:#ec1e1e; padding:10px; border:none; color:white; cursor:pointer; margin-left:5px; }
 .trigger-refresh, .thankyou, .trigger-reconfig { float:right; }

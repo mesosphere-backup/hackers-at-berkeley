@@ -23,7 +23,8 @@ def index(value=None):
     endpoint_dict = json.loads(endpoint_data)
 
     # We assume a fixed HEATMAP_WIDTH and scale the height accordingly based
-    # on the maximum x and y values.
+    # on the maximum x and y values. Note that we are assuming here that
+    # the minimum x and y values are zero.
     max_x = endpoint_dict["ranges"]["x"][1]
     max_y = endpoint_dict["ranges"]["y"][1]
     aspect_ratio = float(max_y) / float(max_x)
@@ -33,9 +34,16 @@ def index(value=None):
     x_scale = float(HEATMAP_WIDTH) / float(max_x)
     y_scale = float(heatmap_height) / float(max_y)
 
+    # Find the maximum intensity when the minimum intensity is set to zero.
+    # This is the form that we will send to the client, as the heatmap's
+    # intensity always starts at zero.
+    min_intensity = int(endpoint_dict["ranges"]["intensity"][0])
+    adjusted_intensity = int(endpoint_dict["ranges"]["intensity"][1]) - \
+                         min_intensity
+
     # Build a dictionary containing the heatmap input data that will become a
     # JSON string to be sent to the client.
-    heatmap_dict = {"max": endpoint_dict["ranges"]["intensity"][1],
+    heatmap_dict = {"max": adjusted_intensity,
                     "data": [{"x": int(float(d["x"])*x_scale),
                               "y": int(float(d["y"])*y_scale),
                               "value": d["intensity"]}
@@ -51,5 +59,5 @@ if __name__ == "__main__":
     # In a real environment, never run with debug=True
     # because it gives you an interactive shell when you
     # trigger an unhandled exception.
-    app.run(host="0.0.0.0", debug=True, port=80)
+    app.run(host="0.0.0.0", debug=True, port=8080, threaded=True)
 

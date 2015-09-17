@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<!-- saved from url=(0071)http://www.patrick-wied.at/static/heatmapjs/example-minimal-config.html -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta charset="utf-8">
   <title>Volume Level Heatmap</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="index, follow">
   <meta name="description" content="This shows a heatmap of volume intensities measured by a swarm of microphones.">
-  <meta name="keywords" content="minimal config heatmap, heatmap.js, heatmap config">
+  <meta http-equiv="refresh" content="5000">
   <link rel="stylesheet" href="./static/commons.css">
   <link rel="stylesheet" href="./static/example-commons.css">
   <style>
@@ -26,88 +25,26 @@
       <br style="clear:both">
 
     <div class="demo-wrapper">
-      <div class="heatmap" style="position: relative;">
+      <div class="heatmap" style="position: relative;width:800px;height:{{ heatmap_y }}px"></div>
 
-      <canvas class="heatmap-canvas" width="800" height="{{ heatmap_y }}" style="position: absolute; left: 0px; top: 0px;"></canvas></div>
-    </div>
-    <div class="demo-controls">
-      <button class="trigger-refresh btn">re-generate data</button>
-      <br style="clear:both">
     </div>
 
   <script src="./static/heatmap.min.js"></script>
   <script>
     window.onload = function() {
 
-      function generateRandomData(len) {
-        // generate some random data
-        var points = [];
-        var max = 0;
-        var width = 840;
-        var height = 400;
-
-        while (len--) {
-          var val = Math.floor(Math.random()*100);
-          max = Math.max(max, val);
-          var point = {
-            x: Math.floor(Math.random()*width),
-            y: Math.floor(Math.random()*height),
-            value: val
-          };
-          points.push(point);
-        }
-
-        var data = { max: max, data: points };
-        return data;
-      }
-
       var heatmapInstance = h337.create({
         container: document.querySelector('.heatmap')
       });
 
-      // generate 200 random datapoints
-      //var data = generateRandomData(200);
+      // Insert the JSON string containing heatmap data, passed
+      // from our web service.
       var data = {{ json_data | safe }};
       heatmapInstance.setData(data);
-
 
       document.querySelector('.trigger-refresh').onclick = function() {
         heatmapInstance.setData(generateRandomData(200));
       };
-
-
-      /* not relevant */
-        var getPiwik = (function() {
-          var piwik;
-
-          return function() {
-            if (piwik) {
-              return piwik;
-            } else {
-              if (!window.Piwik) {
-                piwik = {
-                  getAsyncTracker: function() { return { trackEvent: function() { return; }}}
-                };
-              } else {
-                piwik = window.Piwik;
-              }
-              return piwik; 
-            }
-          };
-        })();
-
-        document.querySelector('.thankyou').onclick = function() {
-          getPiwik().getAsyncTracker().trackEvent('heatmapjs', 'thankyou');
-          ga('send','event', 'social', 'thanks');
-          document.querySelector('.thankyou').style.display = 'none';
-          document.querySelector('#share').style.display = 'block';
-        };
-        var btns = document.querySelectorAll('.symbol');
-        for (var i = 0; i < btns.length; i++) {
-          btns[i].onclick = function() {
-            ga('send', 'event','social', 'share');
-          };
-        }
 
     };
   </script>
