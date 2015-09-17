@@ -18,7 +18,7 @@ def index(value=None):
     # max/min range of each parameter, and then a list of objects containing
     # the values associated with each point source.
     endpoint_data = urllib2.urlopen(
-        "http://hackers-at-berkeley.mesosphere.io:8088/read").read()
+        "http://hackers-at-berkeley.mesosphere.io:80/read").read()
     # Convert this JSON string into a dictionary.
     endpoint_dict = json.loads(endpoint_data)
 
