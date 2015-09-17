@@ -39,17 +39,17 @@ producer = SimpleProducer(kafka, async=True)
 
 app = Flask(__name__)
 
-default_ranges = {"intensity": [0, 5000],
+default_ranges = {"intensity": [300, 3000],
                   "x": [0, 100],
                   "y": [0, 25]}
 
-sensor_map = {1: [25, 8],
-              2: [25, 16],
-              3: [75, 8],
-              4: [75, 16],
-              5: [50, 8],
+sensor_map = {1: [95, 5],
+              2: [80, 5],
+              3: [58, 8],
+              4: [45, 5],
+              5: [20, 8],
               6: [50, 16],
-              7: [50, 12]}
+              7: [5, 12]}
 
 print >> sys.stderr, "after env setup"
 
