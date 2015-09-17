@@ -68,6 +68,7 @@ def index(value=None):
 def read():
     # read data from cassandra, if it's been populated yet
     try:
+        try_setup()
         session = cassandra_cli.connect()
         results = session.execute('SELECT x, y, value '
                                   'FROM TEMPLATE_CASSANDRA_KEYSPACE.spark_results',
@@ -77,7 +78,6 @@ def read():
                         "sources": rows})
     except e:
         print >> sys.stderr, "failed to execute read on cassandra: %s" % e
-        try_setup()
         return e
 
 @app.route('/remove/<sensor_id>')
@@ -92,7 +92,6 @@ def remove(sensor_id):
         return 'removed data at x=%s, y=%s' % (x, y)
     except e:
         print >> sys.stderr, "failed to execute delete on cassandra: %s" % e
-        try_setup()
         return e
 
 @app.route('/submit/<sensor_id>/<sensor_value>')
@@ -108,6 +107,7 @@ def write(sensor_id, sensor_value):
     # producer.send_messages(b'TEMPLATE_KAFKA_TOPIC',
     #                        b"%s %d" % (sensor_id, sensor_value))
     try:
+        try_setup()
         session = cassandra_cli.connect()
         results = session.execute('INSERT INTO '
                                   'TEMPLATE_CASSANDRA_KEYSPACE.spark_results '
@@ -118,8 +118,9 @@ def write(sensor_id, sensor_value):
         return 'sensor %s submitted value %d' % (sensor_id, average_value)
     except e:
         print >> sys.stderr, "failed to execute read on cassandra: %s" % e
-        try_setup()
 
+# This doesn't actually run in the container (not __main__ when in uWSGI) and
+# is for local debugging.
 if __name__ == "__main__":
     # In a real environment, never run with debug=True
     # because it gives you an interactive shell when you
