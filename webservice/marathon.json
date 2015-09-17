@@ -1,5 +1,5 @@
 {
-  "id": "/heatmap-webservice-greg",
+  "id": "/heatmap-webservice-user",
   "cpus": 1,
   "mem": 256,
   "instances": 1,
