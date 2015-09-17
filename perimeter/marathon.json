@@ -8,7 +8,7 @@
   "container": {
     "type": "DOCKER",
     "docker": {
-      "image": "spacejam/hack-at-berkeley",
+      "image": "greggomann/micstream-http-endpoint",
       "forcePullImage": true,
       "network": "BRIDGE",
       "portMappings": [
