@@ -1,0 +1,36 @@
+<!doctype html>
+<title>Hello from DCOS</title>
+<script type="text/javascript"
+  src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript">
+  var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
+
+{% block body %}
+<script type="text/javascript">
+  function executeQuery() {
+    $.ajax({
+      url: '/read',
+      success: function(data) {
+        console.log(data);
+        results = "<ul>";
+        for (result in data.results) {
+          console.log(results)
+          results += "<li>" + result +"</li>";
+        }
+        results += "</ul>"
+        $("#results").html(results);
+      }
+    });
+    setTimeout(executeQuery, 5000);
+  }
+
+  $(document).ready(function() {
+    setTimeout(executeQuery, 50);
+  });
+</script>
+
+<h1>Hello from DCOS</h1>
+<div id="results">1</div>
+
+{% endblock %}
