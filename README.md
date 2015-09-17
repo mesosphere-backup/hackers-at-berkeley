@@ -19,6 +19,9 @@ If you're taking part in the Hackers at Berkeley workshop, we have already provi
 
 ### DCOS Cluster with Cassandra, Kafka and Spark
 
+
+![DCOS services](/img/dcos-architecture.png?raw=true)
+
 1. Stand up a [Mesosphere DCOS cluster on Amazon Web Services](https://mesosphere.com/product/). Configure the DCOS CLI to point to this cluster.
 
 2. Install [Cassandra](https://docs.mesosphere.com/services/cassandra/):
