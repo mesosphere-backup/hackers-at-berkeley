@@ -1,0 +1,31 @@
+{
+  "id": "/example-front-end",
+  "cpus": 1,
+  "mem": 256,
+  "instances": 1,
+  "constraints": [["hostname", "UNIQUE"]],
+  "acceptedResourceRoles": ["slave_public"],
+  "container": {
+    "type": "DOCKER",
+    "docker": {
+      "image": "<YOUR_USERNAME>/example_dcos_frontend",
+      "forcePullImage": true,
+      "network": "BRIDGE",
+      "portMappings": [
+          {
+              "containerPort": 8080,
+              "hostPort": <SOME_FREE_PORT>,
+              "protocol": "tcp"
+          }
+      ]
+    }
+  },
+  "healthChecks": [{
+      "protocol": "TCP",
+      "gracePeriodSeconds": 600,
+      "intervalSeconds": 30,
+      "portIndex": 0,
+      "timeoutSeconds": 10,
+      "maxConsecutiveFailures": 2
+  }]
+}
