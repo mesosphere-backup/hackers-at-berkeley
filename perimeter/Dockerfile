@@ -1,5 +1,8 @@
 FROM orchardup/python:2.7
-RUN pip install Flask cassandra-driver kafka-python srvlookup
+RUN pip install Flask srvlookup
+RUN pip install cassandra-driver
+RUN pip install kafka-python
+RUN pip install uwsgi
 ADD . /code
 WORKDIR /code
-CMD python perimeter.py
+CMD uwsgi --http 0.0.0.0:8080 --wsgi-file perimeter.py --callable app --master --no-default-app -p 10

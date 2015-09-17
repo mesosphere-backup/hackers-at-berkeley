@@ -1,3 +1,5 @@
+import sys
+
 from cassandra.cluster import Cluster
 from flask import Flask, render_template, jsonify
 from kafka import SimpleProducer, KafkaClient
@@ -9,17 +11,20 @@ cassandra_cli = Cluster(['cassandra-dcos-node.cassandra.dcos.mesos'],
                         protocol_version=3)
 
 # Setup cassandra if necessary
-cc = cassandra_cli.connect()
-cc.execute("""
-CREATE KEYSPACE IF NOT EXISTS TEMPLATE_CASSANDRA_KEYSPACE
-WITH replication = {'class':'SimpleStrategy', 'replication_factor':3}""")
-cc.execute("""
-CREATE TABLE IF NOT EXISTS TEMPLATE_CASSANDRA_KEYSPACE.spark_results (
-  x int,
-  y int,
-  value int,
-  PRIMARY KEY (x, y)
-)""")
+def try_setup():
+    print >> sys.stderr, "verifying and possibly creating cassandra schema"
+    cc = cassandra_cli.connect()
+    cc.execute("""
+    CREATE KEYSPACE IF NOT EXISTS TEMPLATE_CASSANDRA_KEYSPACE
+    WITH replication = {'class':'SimpleStrategy', 'replication_factor':3}""")
+    cc.execute("""
+    CREATE TABLE IF NOT EXISTS TEMPLATE_CASSANDRA_KEYSPACE.spark_results (
+      x int,
+      y int,
+      value int,
+      PRIMARY KEY (x, y)
+    )""")
+    print >> sys.stderr, "cassandra configured"
 
 # Kafka may not always run on the same port, so we need to perform
 # an SRV record lookup in order to find it.
@@ -45,6 +50,8 @@ sensor_map = {1: [25, 8],
               5: [50, 8],
               6: [50, 16]}
 
+print >> sys.stderr, "after env setup"
+
 @app.route('/')
 @app.route('/test')
 def test_endpoint():
@@ -59,22 +66,31 @@ def index(value=None):
 @app.route('/read')
 def read():
     # read data from cassandra, if it's been populated yet
-    session = cassandra_cli.connect()
-    results = session.execute('SELECT x, y, value '
-                              'FROM TEMPLATE_CASSANDRA_KEYSPACE.spark_results')
-    rows = [{"x": r.x, "y": r.y, "intensity": r.value} for r in results]
-    return jsonify({"ranges": default_ranges,
-                    "sources": rows})
+    try:
+        session = cassandra_cli.connect()
+        results = session.execute('SELECT x, y, value '
+                                  'FROM TEMPLATE_CASSANDRA_KEYSPACE.spark_results',
+                                  timeout=5)
+        rows = [{"x": r.x, "y": r.y, "intensity": r.value} for r in results]
+        return jsonify({"ranges": default_ranges,
+                        "sources": rows})
+    except e:
+        print >> sys.stderr, "failed to execute read on cassandra: %s" % e
+        return e
 
 @app.route('/remove/<sensor_id>')
 def remove(sensor_id):
     (x, y) = sensor_id.split(',')
     # read data from cassandra, if it's been populated yet
-    session = cassandra_cli.connect()
-    results = session.execute('DELETE FROM '
-                              'TEMPLATE_CASSANDRA_KEYSPACE.spark_results '
-                              'WHERE x = ' + x + ' AND y = ' + y)
-    return 'removed data at x=%s, y=%s' % (x, y)
+    try:
+        session = cassandra_cli.connect()
+        results = session.execute('DELETE FROM '
+                                  'TEMPLATE_CASSANDRA_KEYSPACE.spark_results '
+                                  'WHERE x = ' + x + ' AND y = ' + y)
+        return 'removed data at x=%s, y=%s' % (x, y)
+    except e:
+        print >> sys.stderr, "failed to execute delete on cassandra: %s" % e
+        return e
 
 @app.route('/submit/<sensor_id>/<sensor_value>')
 def write(sensor_id, sensor_value):
@@ -88,12 +104,17 @@ def write(sensor_id, sensor_value):
 
     # producer.send_messages(b'TEMPLATE_KAFKA_TOPIC',
     #                        b"%s %d" % (sensor_id, sensor_value))
-    session = cassandra_cli.connect()
-    results = session.execute('INSERT INTO '
-                              'TEMPLATE_CASSANDRA_KEYSPACE.spark_results '
-                              '(x, y, value) '
-                              'VALUES (%s, %s, %d)' % (x, y, average_value))
-    return 'sensor %s submitted value %d' % (sensor_id, average_value)
+    try:
+        session = cassandra_cli.connect()
+        results = session.execute('INSERT INTO '
+                                  'TEMPLATE_CASSANDRA_KEYSPACE.spark_results '
+                                  '(x, y, value) '
+                                  'VALUES (%s, %s, %d)' % (x, y, average_value),
+                                  timeout=5)
+        print >> sys.stderr, "after execute"
+        return 'sensor %s submitted value %d' % (sensor_id, average_value)
+    except e:
+        print >> sys.stderr, "failed to execute read on cassandra: %s" % e
 
 if __name__ == "__main__":
     # In a real environment, never run with debug=True
