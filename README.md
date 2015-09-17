@@ -38,8 +38,4 @@ We use Raspberry Pis and PyAlsaAudio to send volume data to our cluster. See [mi
 
 ## Perimeter
 
-REST API that provides an interface to write values and read stored values.
-
-### Installation
-
-`dcos marathon app add perimeter/marathon.json`
+REST API that provides an interface to write values and read stored values. See [perimeter/README.md] for installation instructions.
