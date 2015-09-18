@@ -56,7 +56,7 @@ print >> sys.stderr, "after env setup"
 @app.route('/')
 @app.route('/test')
 def test_endpoint():
-    return 'testing...'
+    return render_template('index.html')
 
 @app.route('/whatever/<value>')
 def index(value=None):

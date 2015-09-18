@@ -9,7 +9,7 @@ To deploy an example "internet of things" ingestion pipeline using DCOS and rela
 
 ## Workshop!
 
-Exercises are provided in the [bundled slide deck](/workshop.pdf).
+Exercises are provided in the [bundled slide deck](/workshop.pdf?raw=true).
 
 ## Appendix
 
