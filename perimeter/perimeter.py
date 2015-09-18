@@ -58,6 +58,10 @@ print >> sys.stderr, "after env setup"
 def test_endpoint():
     return render_template('index.html')
 
+@app.route('/init')
+def init_endpoint():
+    try_setup()
+
 @app.route('/whatever/<value>')
 def index(value=None):
     # serve code that periodically hits /read to get the
@@ -68,7 +72,6 @@ def index(value=None):
 def read():
     # read data from cassandra, if it's been populated yet
     try:
-        try_setup()
         session = cassandra_cli.connect()
         results = session.execute('SELECT x, y, value '
                                   'FROM TEMPLATE_CASSANDRA_KEYSPACE.spark_results',
@@ -107,7 +110,6 @@ def write(sensor_id, sensor_value):
     # producer.send_messages(b'TEMPLATE_KAFKA_TOPIC',
     #                        b"%s %d" % (sensor_id, sensor_value))
     try:
-        try_setup()
         session = cassandra_cli.connect()
         results = session.execute('INSERT INTO '
                                   'TEMPLATE_CASSANDRA_KEYSPACE.spark_results '
