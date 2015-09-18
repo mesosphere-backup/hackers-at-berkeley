@@ -1,5 +1,5 @@
 {
-  "id": "/example-web-service-user",
+  "id": "/simple-webservice-user",
   "cpus": 0.25,
   "mem": 256,
   "instances": 1,
