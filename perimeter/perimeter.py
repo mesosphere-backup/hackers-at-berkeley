@@ -39,7 +39,7 @@ producer = SimpleProducer(kafka, async=True)
 
 app = Flask(__name__)
 
-default_ranges = {"intensity": [300, 3000],
+default_ranges = {"intensity": [0, 2500],
                   "x": [0, 100],
                   "y": [0, 25]}
 
