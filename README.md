@@ -9,7 +9,7 @@ To deploy an example "internet of things" ingestion pipeline using DCOS and rela
 
 ## Workshop!
 
-Exercises are provided in the bundled slide deck.
+Exercises are provided in the [bundled slide deck](/workshop.pdf?raw=true).
 
 ## Appendix
 
@@ -44,8 +44,8 @@ If you're taking part in the Hackers at Berkeley workshop, we have already provi
 
 ### Micstream
 
-We use Raspberry Pis and PyAlsaAudio to send volume data to our cluster. See [micstream/README.md] for Raspberry Pi installation instructions.
+We use Raspberry Pis and PyAlsaAudio to send volume data to our cluster. See [micstream/README.md](micstream/README.md) for Raspberry Pi installation instructions.
 
 ### Perimeter
 
-REST API that provides an interface to write values and read stored values. See [perimeter/README.md] for installation instructions.
+REST API that provides an interface to write values and read stored values. See [perimeter/README.md](perimeter/README.md) for installation instructions.
