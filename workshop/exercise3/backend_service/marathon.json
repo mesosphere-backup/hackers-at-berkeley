@@ -1,5 +1,5 @@
 {
-  "id": "/example-backend-user",
+  "id": "/example-dcos-backend-user",
   "cpus": 0.25,
   "mem": 256,
   "instances": 1,
