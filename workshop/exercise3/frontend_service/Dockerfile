@@ -1,5 +1,5 @@
 FROM python:2.7
-RUN pip install Flask srvlookup requests
+RUN pip install flask srvlookup requests
 ADD . /code
 WORKDIR /code
 EXPOSE 8080

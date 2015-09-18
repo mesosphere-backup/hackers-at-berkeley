@@ -7,7 +7,7 @@ import srvlookup
 app = Flask(__name__)
 
 def lookup_backends():
-    return srvlookup.lookup('example_dcos_backend', 'tcp', 'marathon.mesos')
+    return srvlookup.lookup('example_dcos_backend_user', 'tcp', 'marathon.mesos')
 
 @app.route('/')
 def index():

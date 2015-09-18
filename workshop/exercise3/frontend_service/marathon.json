@@ -1,6 +1,6 @@
 {
-  "id": "/example-front-end",
-  "cpus": 1,
+  "id": "/example-frontend-user",
+  "cpus": 0.25,
   "mem": 256,
   "instances": 1,
   "constraints": [["hostname", "UNIQUE"]],
@@ -8,7 +8,7 @@
   "container": {
     "type": "DOCKER",
     "docker": {
-      "image": "<YOUR_USERNAME>/example_dcos_frontend",
+      "image": "<your_dockerhub_name>/example_dcos_frontend",
       "forcePullImage": true,
       "network": "BRIDGE",
       "portMappings": [
