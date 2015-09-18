@@ -8,7 +8,7 @@
   "container": {
     "type": "DOCKER",
     "docker": {
-      "image": "<your_dockerhub_name>/<app_name>",
+      "image": "<your_dockerhub_name>/simple-webservice",
       "forcePullImage": true,
       "network": "BRIDGE",
       "portMappings": [
