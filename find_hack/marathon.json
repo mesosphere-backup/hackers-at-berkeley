@@ -1,0 +1,31 @@
+{
+  "id": "/find-hack",
+  "cpus": 1,
+  "mem": 256,
+  "instances": 10,
+  "constraints": [["hostname", "UNIQUE"]],
+  "acceptedResourceRoles": ["slave_public"],
+  "container": {
+    "type": "DOCKER",
+    "docker": {
+      "image": "spacejam/find-hack",
+      "forcePullImage": true,
+      "network": "BRIDGE",
+      "portMappings": [
+          {
+              "containerPort": 8080,
+              "hostPort": 8080,
+              "protocol": "tcp"
+          }
+      ]
+    }
+  },
+  "healthChecks": [{
+      "protocol": "TCP",
+      "gracePeriodSeconds": 600,
+      "intervalSeconds": 30,
+      "portIndex": 0,
+      "timeoutSeconds": 10,
+      "maxConsecutiveFailures": 2
+  }]
+}
