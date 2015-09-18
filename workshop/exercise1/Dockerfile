@@ -1,6 +1,6 @@
 FROM orchardup/python:2.7
 RUN pip install Flask
-RUN pip install uwsgi
 ADD . /code
 WORKDIR /code
-CMD uwsgi --http 0.0.0.0:8080 --wsgi-file simple_webservice.py --callable app --master --no-default-app -p 10
+EXPOSE 8080
+CMD ./simple_webservice.py
