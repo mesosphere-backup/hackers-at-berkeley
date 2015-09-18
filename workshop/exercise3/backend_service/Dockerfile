@@ -3,4 +3,4 @@ RUN pip install Flask
 RUN pip install uwsgi
 ADD . /code
 WORKDIR /code
-CMD uwsgi --http 0.0.0.0:8080 --wsgi-file back_end.py --callable app --master --no-default-app -p 10
+CMD uwsgi --http 0.0.0.0:8080 --wsgi-file back_end.py --callable app --master --no-default-app -p 10 -R 5
