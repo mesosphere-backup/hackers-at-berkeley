@@ -30,3 +30,9 @@ def read():
             "values": requests.get(endpoint).json(),
         })
     return jsonify(results)
+
+if __name__ == "__main__":
+    # In a real environment, never run with debug=True
+    # because it gives you an interactive shell when you
+    # trigger an unhandled exception.
+    app.run(host="0.0.0.0", debug=True, port=8080, threaded=True)
