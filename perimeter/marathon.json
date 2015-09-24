@@ -2,7 +2,7 @@
   "id": "/perimeter",
   "cpus": 1,
   "mem": 256,
-  "instances": 10,
+  "instances": 1,
   "constraints": [["hostname", "UNIQUE"]],
   "acceptedResourceRoles": ["slave_public"],
   "container": {
