@@ -15,7 +15,7 @@ If you're taking part in the Hackers at Berkeley workshop, we have already provi
 
     `dcos package install cassandra`
 
-3. Optionally, create a nice hostname in Route53 and set it to CNAME the public IP address of your cluster. You will have to look this up using AWS's EC2 instance manager.
+3. Optionally, create a nice hostname in Route53 and set it to CNAME the public IP address of your cluster. You will have to look this up using AWS's EC2 instance manager. Our install script uses `http://hackers-at-berkeley.mesosphere.io`.
 
 
 ### Micstream
@@ -25,3 +25,5 @@ We use Raspberry Pis and PyAlsaAudio to send volume data to our cluster. See [mi
 ### Perimeter
 
 REST API that provides an interface to write values and read stored values. See [perimeter/README.md](perimeter/README.md) for installation instructions.
+
+Once you've deployed Perimeter for the first time, be sure to hit `http://hackers-at-berkeley.mesosphere.io/init` (or whatever domain name you've used) to initialise the Cassandra keyspace.
