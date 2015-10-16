@@ -25,6 +25,7 @@ def try_setup():
       PRIMARY KEY (x, y)
     )""")
     print >> sys.stderr, "cassandra configured"
+    return "cassandra configured"
 
 # Kafka may not always run on the same port, so we need to perform
 # an SRV record lookup in order to find it.
